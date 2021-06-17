@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  n1:
+    build: .
+    image: cassandra-with-cqlshrc
+    networks:
+      - cluster
+
+  n2:
+    image: 'cassandra:4.0'
+    networks:
+      - cluster
+    environment:
+        - CASSANDRA_SEEDS=n1
+    depends_on:
+      - n1
+
+  n3:
+    image: 'cassandra:4.0'
+    networks:
+      - cluster
+    environment:
+        - CASSANDRA_SEEDS=n1
+    depends_on:
+      - n1
+  
+  n1-exporter:
+    image: 'bitnami/cassandra-exporter'
+    networks:
+      - cluster
+
+networks:
+  cluster: null
